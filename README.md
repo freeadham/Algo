@@ -31,14 +31,13 @@ The function returns:
 
 ## 2. First Algorithm — Sorting Approach (Non-Recursive)
 
-### The Idea (in plain words)
+### The Idea
 
 If we sort the array from smallest to largest, then for any three numbers `a ≤ b ≤ c`:
 - `b + c > a` is **always true** (because `b` and `c` are at least as big as `a`)
 - `a + c > b` is **always true** (because `c` is at least as big as `b`)
 - So the **only condition we really need to check** is `a + b > c`
 
-Even better: we only need to check **three numbers that are next to each other in the sorted array**. Why? Because if some far-apart triplet works, then taking the three closest neighbors of the biggest one will also work (their two smaller values will be at least as big, making `a + b > c` even more likely).
 
 So the algorithm is:
 1. Sort the array using **bubble sort**
@@ -46,7 +45,7 @@ So the algorithm is:
 3. If any group satisfies `A[i] + A[i+1] > A[i+2]`, return `1`
 4. If none does, return `0`
 
-### How Bubble Sort Works (quick refresher)
+### How Bubble Sort Works
 
 Bubble sort works by repeatedly walking through the array and swapping any two neighbors that are in the wrong order:
 
@@ -90,7 +89,7 @@ def bubble_sort(A):
     for i in range(N - 1):
         for j in range(N - 1 - i):
             if A[j] > A[j + 1]:
-                A[j], A[j + 1] = A[j + 1], A[j]   # swap
+                A[j], A[j + 1] = A[j + 1], A[j]
 
 
 def has_triangle_sorting(A):
@@ -98,7 +97,7 @@ def has_triangle_sorting(A):
     if N < 3:
         return 0
 
-    A = list(A)       # copy so we don't change the original
+    A = list(A)
     bubble_sort(A)
 
     for i in range(N - 2):
@@ -108,9 +107,8 @@ def has_triangle_sorting(A):
     return 0
 
 
-# Tests
-print(has_triangle_sorting([10, 50, 1]))            # 0
-print(has_triangle_sorting([10, 2, 5, 1, 8, 20]))   # 1
+print(has_triangle_sorting([10, 50, 1]))
+print(has_triangle_sorting([10, 2, 5, 1, 8, 20]))
 ```
 
 ### Analysis & Complexity (Steps)
@@ -137,13 +135,12 @@ O(1)  +  O(N²)  +  O(N) × O(1)
 
 The bubble sort step is the most expensive, so it dominates.
 
-**Space complexity:** `O(1)` extra space. Bubble sort sorts the array **in place** using only swaps — no temporary arrays needed.
 
 ---
 
 ## 3. Second Algorithm — Brute Force (Recursive)
 
-### The Idea (in plain words)
+### The Idea
 
 Just try **every possible triplet** `(P, Q, R)` and check the triangle conditions on each one.
 
@@ -170,26 +167,26 @@ function isTriangle(A, P, Q, R):
 
 function loop_R(A, P, Q, R):
     if R >= length(A):
-        return 0                       // end of inner loop
+        return 0                  
     if isTriangle(A, P, Q, R):
-        return 1                       // found a triangle!
-    return loop_R(A, P, Q, R + 1)      // advance R
+        return 1                       
+    return loop_R(A, P, Q, R + 1)      
 
 
 function loop_Q(A, P, Q):
     if Q >= length(A) - 1:
-        return 0                       // end of middle loop
+        return 0                      
     if loop_R(A, P, Q, Q + 1) == 1:
         return 1
-    return loop_Q(A, P, Q + 1)         // advance Q
+    return loop_Q(A, P, Q + 1)    
 
 
 function loop_P(A, P):
     if P > length(A) - 3:
-        return 0                       // end of outer loop
+        return 0                    
     if loop_Q(A, P, P + 1) == 1:
         return 1
-    return loop_P(A, P + 1)            // advance P
+    return loop_P(A, P + 1)       
 
 
 function hasTriangle(A):
@@ -237,9 +234,8 @@ def has_triangle_recursive(A):
     return loop_P(A, 0)
 
 
-# Tests
-print(has_triangle_recursive([10, 50, 1]))            # 0
-print(has_triangle_recursive([10, 2, 5, 1, 8, 20]))   # 1
+print(has_triangle_recursive([10, 50, 1]))           
+print(has_triangle_recursive([10, 2, 5, 1, 8, 20]))  
 ```
 
 ### Analysis & Complexity (Steps)
@@ -264,8 +260,6 @@ More precisely, the number of valid triplets `(P, Q, R)` with `P < Q < R` is `C(
 O(N³)
 ```
 
-**Space complexity:** `O(N)` because of the recursion call stack. `loop_P` can stack up to `N` calls deep, then `loop_Q` up to `N` more, then `loop_R` up to `N` more — total about `3N`, which is `O(N)`.
-
 ---
 
 ## 4. Comparison Between the Two Algorithms
@@ -276,17 +270,12 @@ O(N³)
 | Main idea | Sort first, then check only consecutive triplets | Try every possible triplet |
 | Time complexity | `O(N²)` | `O(N³)` |
 | Space complexity | `O(1)` extra (in-place sort) | `O(N)` (recursion stack) |
-| Speed for `N = 1000` | About `500,000` operations | About `1,000,000,000` operations |
 | Simplicity of idea | A little tricky (needs the math insight) | Very direct and obvious |
 | Best use case | Most arrays (general use) | Small arrays / teaching recursion |
 
 ### Final Verdict
 
-The **bubble sort + scan algorithm is much faster** because `O(N²)` grows much slower than `O(N³)`. For example, when `N = 1000`:
-- Algorithm 1: about `500,000` steps → instant
-- Algorithm 2: about `1,000,000,000` steps → very slow (seconds or more)
-
-That makes Algorithm 1 roughly **2,000 times faster** than Algorithm 2 for an array of size `1000`.
+The **bubble sort + scan algorithm is much faster** because `O(N²)` grows much slower than `O(N³)`.
 
 The **recursive brute force algorithm** is easier to understand — it just tries everything. But it becomes unusable when the array is big.
 
