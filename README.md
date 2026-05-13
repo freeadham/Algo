@@ -269,7 +269,6 @@ O(N³)
 | Approach | Fully iterative (loops only) | Fully recursive (function calls itself) |
 | Main idea | Sort first, then check only consecutive triplets | Try every possible triplet |
 | Time complexity | `O(N²)` | `O(N³)` |
-| Space complexity | `O(1)` extra (in-place sort) | `O(N)` (recursion stack) |
 | Simplicity of idea | A little tricky (needs the math insight) | Very direct and obvious |
 | Best use case | Most arrays (general use) | Small arrays / teaching recursion |
 
